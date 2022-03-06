@@ -3,6 +3,10 @@ import { List } from 'immutable';
 import './App.css';
 import Entry from './Entry';
 import EntriesTable from './EntriesTable';
+import Totals from './Totals';
+
+const TabNameEntries = "entries"
+const TabNameTotals = "totals"
 
 interface EntryStore {
   save: (entries: List<Entry>) => void
@@ -21,6 +25,12 @@ const EntryStoreLocalStorage = (key: string) => {
   }
 
   return { save, load }
+}
+
+const useTabClick = (tabName: string, setActiveTabName: React.Dispatch<React.SetStateAction<string>>) => {
+  return React.useCallback(() => {
+    setActiveTabName(tabName)
+  }, [tabName, setActiveTabName])
 }
 
 function App() {
@@ -50,6 +60,18 @@ function App() {
       .then(setEntries)
   }, [setEntries])
 
+  const [activeTabName, setActiveTabName] = React.useState(TabNameEntries)
+  const onEntriesTabClick = useTabClick(TabNameEntries, setActiveTabName)
+  const onTotalsTabClick = useTabClick(TabNameTotals, setActiveTabName)
+
+  const activeTab = React.useMemo(() => {
+    switch (activeTabName) {
+      case TabNameEntries: return <EntriesTable entries={entries} onChange={setEntries} />
+      case TabNameTotals: return <Totals entries={entries} />
+      default: return null
+    }
+  }, [activeTabName])
+
   return (
     <div className="container-fluid pt-3">
       <div className="row">
@@ -67,8 +89,18 @@ function App() {
           </form>
         </div>
       </div>
-      <EntriesTable entries={entries} onChange={setEntries} />
-    </div>
+      <nav>
+        <div role="tablist" className="nav nav-tabs">
+          <button role="tab" onClick={onEntriesTabClick} className={`nav-link ${activeTabName === TabNameEntries ? "active" : ""}`}>
+            Entries
+          </button>
+          <button role="tab" onClick={onTotalsTabClick} className={`nav-link ${activeTabName === TabNameTotals ? "active" : ""}`}>
+            Totals
+          </button>
+        </div>
+      </nav >
+      {activeTab}
+    </div >
   );
 }
 
