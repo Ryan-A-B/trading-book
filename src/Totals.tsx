@@ -31,7 +31,7 @@ const Totals: React.FunctionComponent<Props> = ({ entries }) => {
             </thead>
             <tbody>
                 {totals.map((amount, asset) => (
-                    <tr>
+                    <tr key={asset}>
                         <td>
                             {asset}
                         </td>
