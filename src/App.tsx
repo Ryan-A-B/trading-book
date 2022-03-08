@@ -4,9 +4,11 @@ import './App.css';
 import Entry from './Entry';
 import EntriesTable from './EntriesTable';
 import Totals from './Totals';
+import QuantityByAssetByLocation from './QuantityByAssetByLocation';
 
 const TabNameEntries = "entries"
 const TabNameTotals = "totals"
+const TabNameLocations = "locations"
 
 interface EntryStore {
   save: (entries: List<Entry>) => void
@@ -63,11 +65,13 @@ function App() {
   const [activeTabName, setActiveTabName] = React.useState(TabNameEntries)
   const onEntriesTabClick = useTabClick(TabNameEntries, setActiveTabName)
   const onTotalsTabClick = useTabClick(TabNameTotals, setActiveTabName)
+  const onLocationsTabClick = useTabClick(TabNameLocations, setActiveTabName)
 
   const activeTab = React.useMemo(() => {
     switch (activeTabName) {
       case TabNameEntries: return <EntriesTable entries={entries} onChange={setEntries} />
       case TabNameTotals: return <Totals entries={entries} />
+      case TabNameLocations: return <QuantityByAssetByLocation entries={entries} />
       default: return null
     }
   }, [activeTabName])
@@ -96,6 +100,9 @@ function App() {
           </button>
           <button role="tab" onClick={onTotalsTabClick} className={`nav-link ${activeTabName === TabNameTotals ? "active" : ""}`}>
             Totals
+          </button>
+          <button role="tab" onClick={onLocationsTabClick} className={`nav-link ${activeTabName === TabNameLocations ? "active" : ""}`}>
+            Locations
           </button>
         </div>
       </nav >
