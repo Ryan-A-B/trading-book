@@ -67,15 +67,6 @@ function App() {
   const onTotalsTabClick = useTabClick(TabNameTotals, setActiveTabName)
   const onLocationsTabClick = useTabClick(TabNameLocations, setActiveTabName)
 
-  const activeTab = React.useMemo(() => {
-    switch (activeTabName) {
-      case TabNameEntries: return <EntriesTable entries={entries} onChange={setEntries} />
-      case TabNameTotals: return <Totals entries={entries} />
-      case TabNameLocations: return <QuantityByAssetByLocation entries={entries} />
-      default: return null
-    }
-  }, [activeTabName])
-
   return (
     <div className="container-fluid pt-3">
       <div className="row">
@@ -106,7 +97,9 @@ function App() {
           </button>
         </div>
       </nav >
-      {activeTab}
+      {activeTabName === TabNameEntries && <EntriesTable entries={entries} onChange={setEntries} />}
+      {activeTabName === TabNameTotals && <Totals entries={entries} />}
+      {activeTabName === TabNameLocations && <QuantityByAssetByLocation entries={entries} />}
     </div >
   );
 }
